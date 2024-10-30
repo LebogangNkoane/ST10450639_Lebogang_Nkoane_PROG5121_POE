@@ -6,74 +6,60 @@ package com.mycompany.registerandlogin;
 
 /**
  *
- * @author RC_Student_lab ST10450639_LeboganG_Nkoane
+ * @author RC_Student_lab Lebogang Nkoane
  */
 public class Login {
-    
+    // The Login class is responsible for handling user authentication by managing registration details and validating login attempts against stored credentials. 
+    // It ensures that usernames and passwords adhere to specified formatting requirements, thus providing a secure way for users to access their tasks.
+
     private String username;
     private String password;
     private String firstName;
     private String lastName;
-    
-    // Constructor
-    public Login(String username, String password, String firstName, String lastName) {
-        this.username = username;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-    
-    // Method to check if the username contains an underscore and is no more than 5 characters long
-    public boolean checkUserName() {
-        if (username.contains("_") && username.length() <= 5) {
-            return true; // Username is correct
-        } else {
-            return false; // Username is incorrect
+
+    // This Registers the user by validating the format of the username and password, storing the details if they meet the required criteria.
+    public String registerUser(String user, String pass, String fName, String lName) {
+        if (!checkUserName(user)) {
+            // Returns an error message if the username does not meet formatting rules, prompting the user to correct it.
+            return "Username is not correctly formatted, please ensure that your username contains an underscore and is no more than 5 characters in length.";
         }
+
+        if (!checkPasswordComplexity(pass)) {
+            // Returns an error message if the password does not meet complexity requirements, encouraging the user to create a stronger password.
+            return "Password is not correctly formatted, please ensure that the password contains at least 8 characters, a capital letter, a number, and a special character.";
+        }
+
+        // This Stores registration details in instance variables for use in future login attempts.
+        this.username = user;
+        this.password = pass;
+        this.firstName = fName;
+        this.lastName = lName;
+
+        // This Returns a success message indicating that the registration has been completed successfully.
+        return "Username and password successfully captured. User registered!";
     }
-    
-    // Method to check if the password meets the complexity requirements
-    public boolean checkPasswordComplexity() {
-        // Password has to at least have 8 characters, a capital letter, number, and special character
+
+    // This Validatess the login credentials by comparing the entered username and password against the stored values, returning true if they match.
+    public boolean loginUser(String enteredUsername, String enteredPassword) {
+        return this.username.equals(enteredUsername) && this.password.equals(enteredPassword);
+    }
+
+    // This Returns a message that greets the user upon successful login or indicates failure if the credentials are incorrect.
+    public String returnLoginStatus(boolean loginSuccess) {
+        return loginSuccess ? "Welcome " + firstName + " " + lastName + ", it is great to see you again." : "Username or password incorrect, please try again.";
+    }
+
+    // This Validates the formatting requirements of the username, ensuring it contains an underscore and is no longer than five characters.
+    public boolean checkUserName(String username) {
+        return username.contains("_") && username.length() <= 5;
+    }
+
+    // This Validates the complexity of the password by checking for length, the presence of uppercase letters, numbers, and special characters to ensure security.
+    public boolean checkPasswordComplexity(String password) {
         boolean hasCapitalLetter = !password.equals(password.toLowerCase());
         boolean hasNumber = password.matches(".*\\d.*");
         boolean hasSpecialCharacter = password.matches(".*[!@#$%^&*()].*");
-        
-        if (password.length() >= 8 && hasCapitalLetter && hasNumber && hasSpecialCharacter) {
-            return true; // Password is correct
-        } else {
-            return false; // Password is incorrect
-        }
-    }
-    
-    // Method to register the user and return the right messages
-    public String registerUser() {
-        if (!checkUserName()) {
-            return "Username is not correctly formatted, please ensure that your username contains an underscore and is no more than 5 characters in length.";
-        }
-        
-        if (!checkPasswordComplexity()) {
-            return "Password is not correctly formatted, please ensure that the password contains at least 8 characters, a capital letter, a number and a special character.";
-        }
-        
-        return "Username and password successfully captured. User registered!";
-    }
-    
-    // Method to login the user by verifying username and password
-    public boolean loginUser(String enteredUsername, String enteredPassword) {
-        if (this.username.equals(enteredUsername) && this.password.equals(enteredPassword)) {
-            return true; // Login successful
-        } else {
-            return false; // Login failed
-        }
-    }
-    
-    // Method to return the login status message
-    public String returnLoginStatus(boolean loginSuccess) {
-        if (loginSuccess) {
-            return "Welcome " + firstName + " " + lastName + ", it is great to see you again.";
-        } else {
-            return "Username or password incorrect, please try again.";
-        }
+        return password.length() >= 8 && hasCapitalLetter && hasNumber && hasSpecialCharacter;
     }
 }
+
