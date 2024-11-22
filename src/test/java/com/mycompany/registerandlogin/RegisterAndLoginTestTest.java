@@ -73,7 +73,7 @@ public class RegisterAndLoginTestTest {
     public void testSuccessfulRegistration() {
         Login user = new Login();
         assertEquals("Username and password successfully captured. User registered!", 
-                     user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Buden"),
+                     user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Smith"),
                      "The registration should succeed with valid username and password.");
     }
 
@@ -83,7 +83,7 @@ public class RegisterAndLoginTestTest {
     public void testRegistrationFailUsername() {
         Login user = new Login();
         assertEquals("Username is not correctly formatted, please ensure that your username contains an underscore and is no more than 5 characters in length.", 
-                     user.registerUser("kyle!!!!!!!", "Ch&&sec@ke99!", "Kyle", "Buden"),
+                     user.registerUser("kyle!!!!!!!", "Ch&&sec@ke99!", "Kyle", "Smith"),
                      "The registration should fail due to incorrectly formatted username.");
     }
 
@@ -93,7 +93,7 @@ public class RegisterAndLoginTestTest {
     public void testRegistrationFailPassword() {
         Login user = new Login();
         assertEquals("Password is not correctly formatted, please ensure that the password contains at least 8 characters, a capital letter, a number, and a special character.", 
-                     user.registerUser("kyl_1", "password", "Kyle", "Buden"),
+                     user.registerUser("kyl_1", "password", "Kyle", "Smith"),
                      "The registration should fail due to invalid password format.");
     }
 
@@ -102,7 +102,7 @@ public class RegisterAndLoginTestTest {
     @Test
     public void testLoginSuccessful() {
         Login user = new Login();
-        user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Buden"); // Register the user first
+        user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Smith"); // Register the user first
         assertTrue(user.loginUser("kyl_1", "Ch&&sec@ke99!"), "Login should succeed with correct credentials.");
     }
 
@@ -111,7 +111,7 @@ public class RegisterAndLoginTestTest {
     @Test
     public void testLoginFailed() {
         Login user = new Login();
-        user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Buden"); // Register the user first
+        user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Smith"); // Register the user first
         assertFalse(user.loginUser("kyl_1", "wrongpassword"), "Login should fail due to incorrect password.");
     }
 
@@ -120,7 +120,7 @@ public class RegisterAndLoginTestTest {
     @Test
     public void testReturnLoginStatusSuccess() {
         Login user = new Login();
-        user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Buden"); // Register the user first
+        user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Smith"); // Register the user first
         boolean loginSuccess = user.loginUser("kyl_1", "Ch&&sec@ke99!");
         assertEquals("Welcome Kyle Buden, it is great to see you again.", user.returnLoginStatus(loginSuccess), "The success message should reflect the user's name.");
     }
@@ -130,7 +130,7 @@ public class RegisterAndLoginTestTest {
     @Test
     public void testReturnLoginStatusFailed() {
         Login user = new Login();
-        user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Buden"); // Register the user first
+        user.registerUser("kyl_1", "Ch&&sec@ke99!", "Kyle", "Smith"); // Register the user first
         boolean loginSuccess = user.loginUser("kyl_1", "wrongpassword");
         assertEquals("Username or password incorrect, please try again.", user.returnLoginStatus(loginSuccess), "The failure message should indicate incorrect credentials.");
     }
