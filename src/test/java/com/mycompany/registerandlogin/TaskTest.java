@@ -3,83 +3,80 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
 package com.mycompany.registerandlogin;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
 
 /**
  *
  * @author RC_Student_lab
  */
 public class TaskTest {
-    
+
+    // Test data setup
+    ArrayList<Task> tasks = new ArrayList<>();
+
     public TaskTest() {
-    }
-    
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
-    @BeforeEach
-    public void setUp() {
-    }
-    
-    @AfterEach
-    public void tearDown() {
+        // Populate the tasks list with provided test data
+        tasks.add(new Task("Create Login", 0, "Login functionality for the app", "Mike Smith", 5, "To Do"));
+        tasks.add(new Task("Create Add Features", 1, "Adding new features to the app", "Edward Harrison", 8, "Doing"));
+        tasks.add(new Task("Create Reports", 2, "Generate reports for analysis", "Samantha Paulson", 2, "Done"));
+        tasks.add(new Task("Add Arrays", 3, "Implement array functionality", "Glenda Oberholzer", 11, "To Do"));
     }
 
-    // Test Case 1: Task Description Validation
-    // This test validates the task description length. It checks for successful capture of descriptions under 50 characters and failure for those exceeding this limit.
     @Test
     public void testTaskDescriptionValidation() {
-        // Test for a valid scenario (under 50 characters)
-        String validDescription = "Create Login to authenticate users";
-        assertTrue(Task.checkTaskDescription(validDescription), "Task description should be captured successfully for lengths under 50 characters.");
-
-        // Test for a failure scenario (more than 50 characters)
-        String invalidDescription = "This is an extremely long task description that exceeds fifty characters";
-        assertFalse(Task.checkTaskDescription(invalidDescription), "Task description validation should fail for lengths over 50 characters.");
+        assertTrue(Task.checkTaskDescription("Short description")); // Valid
+        assertFalse(Task.checkTaskDescription("This description is way too long to be valid and should fail the validation")); // Invalid
     }
 
-    // Test Case 2: Task ID Generation
-    // This test verifies that the task ID generation method correctly constructs IDs based on the provided task and developer details, ensuring the expected format is met.
     @Test
     public void testTaskIDGeneration() {
-        // Test data for creating tasks
-        Task task1 = new Task("Login Feature", 0, "Create Login to authenticate users", "Robyn Harrison", 8, "To Do");
-        Task task2 = new Task("Add Task Feature", 1, "Create Add Task Feature to add task users", "Mike Smith", 10, "Doing");
-
-        // Validate Task IDs against expected values
-        assertEquals("LO:0:SON", task1.createTaskID(), "Task ID for Task 1 should match expected format.");
-        assertEquals("AD:1:ITH", task2.createTaskID(), "Task ID for Task 2 should match expected format.");
+        Task task = new Task("Create Login", 0, "Login functionality", "Mike Smith", 5, "To Do");
+        String expectedTaskID = "CR:0:ITH";
+        assertEquals(expectedTaskID, task.createTaskID());
     }
 
-    // Test Case 3: Total Hours Calculation
-    // This test calculates the total hours from multiple tasks and verifies the result against expected values. It also validates accumulation of hours from an array of durations.
     @Test
-    public void testTotalHoursAccumulated() {
-        // Set up tasks for testing total hours
-        Task task1 = new Task("Login Feature", 0, "Create Login to authenticate users", "Robyn Harrison", 8, "To Do");
-        Task task2 = new Task("Add Task Feature", 1, "Create Add Task Feature to add task users", "Mike Smith", 10, "Doing");
-
-        // Accumulate total hours and check the result
-        int totalHours = task1.getTaskDuration() + task2.getTaskDuration();
-        assertEquals(18, totalHours, "Total hours for Task 1 and Task 2 should equal 18.");
-
-        // Additional test data for looping
-        int[] durations = {10, 12, 55, 11, 1}; // Total should be 89
-        int expectedTotal = 89;
-        int actualTotal = 0;
-        for (int duration : durations) {
-            actualTotal += duration; // Accumulating total hours
+    public void testTaskStatusSearch() {
+        ArrayList<Task> doneTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if ("Done".equalsIgnoreCase(task.getTaskStatus())) {
+                doneTasks.add(task);
+            }
         }
-        assertEquals(expectedTotal, actualTotal, "Total hours should equal 89 for the additional set of durations.");
+        assertEquals(1, doneTasks.size());
+        assertEquals("Create Reports", doneTasks.get(0).getTaskName());
+    }
+
+    @Test
+    public void testDeveloperTaskSearch() {
+        String developerName = "Mike Smith";
+        ArrayList<Task> developerTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDeveloperName().equalsIgnoreCase(developerName)) {
+                developerTasks.add(task);
+            }
+        }
+        assertEquals(1, developerTasks.size());
+        assertEquals("Create Login", developerTasks.get(0).getTaskName());
+    }
+
+    @Test
+    public void testLongestTaskDuration() {
+        Task longestTask = tasks.stream().max((t1, t2) -> Integer.compare(t1.getTaskDuration(), t2.getTaskDuration())).orElse(null);
+        assertNotNull(longestTask);
+        assertEquals("Add Arrays", longestTask.getTaskName());
+        assertEquals(11, longestTask.getTaskDuration());
+    }
+
+    @Test
+    public void testTaskDeletion() {
+        String taskNameToDelete = "Create Login";
+        tasks.removeIf(task -> task.getTaskName().equalsIgnoreCase(taskNameToDelete));
+
+        boolean taskExists = tasks.stream().anyMatch(task -> task.getTaskName().equalsIgnoreCase(taskNameToDelete));
+        assertFalse(taskExists); // Ensure task is removed
     }
 }
+ 
